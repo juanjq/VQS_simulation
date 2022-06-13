@@ -268,6 +268,8 @@ def evolve(theta,ncycles,mode):
 
 And the matrices definition at:
 
+**Even-Odd staggering**
+
 ```
 def matrix_evenodd(N,theta,ncycles):
     nn=3
@@ -288,6 +290,7 @@ def matrix_evenodd(N,theta,ncycles):
             U=np.matmul(U,cycle[j])      
     return U
 ```
+**Pairs staggering**
 ```
 def matrix_pairs(N,theta,ncycles):
     nn = int(N/2-N%2/2)
@@ -322,6 +325,7 @@ def matrix_pairs(N,theta,ncycles):
             U=np.matmul(U,cycle[j])  
     return U
 ```
+**Pairs-NNN staggering**
 ```
 def matrix_pairs_nnn(N,theta,ncycles):
     nn = int(N/2-N%2/2)
@@ -362,6 +366,7 @@ def matrix_pairs_nnn(N,theta,ncycles):
             U=np.matmul(U,cycle[j])  
     return U
 ```
+**Individual staggering**
 ```
 def matrix_indiv(N,theta,ncycles):
     nn = N
