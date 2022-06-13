@@ -37,7 +37,8 @@ def gradient_descent(f,v0,alpha,eps,nb_max_iter,total_t,file='descent_gradient',
         nb_iter = nb_iter + 1
         cond = abs( tmp_E0 - E0 ) 
         tmp_E0 = E0
-        if write_mode == True:  aux.write(str(nb_iter)+','+str(E0)+','+str(aux.fidelity(Vex,psi))+','+str(tim())+','+str(mode),file,path)
+        if write_mode == True:  
+            aux.write(str(nb_iter)+','+str(E0)+','+str(aux.fidelity(Vex,psi))+','+str(tim())+','+str(mode),file,path)
         else:
             aux.write(str(nb_iter)+','+str(E0)+','+str(aux.fidelity(Vex,psi))+','+str(tim()),file,path)
 ```
@@ -45,12 +46,9 @@ With the cost function,
 
 ```
 def energy(theta,vec=False):
-    
     psi=evolve(theta,ncycles,mode)
-    
     H_array = [ham.XXZ_X(N),ham.XXZ_Y(N),ham.XXZ_Z(N)]
     E0 = multiMeasure(H_array,psi,Nmeasure)
-    
     if vec == False:
         return E0
     else:
@@ -64,60 +62,41 @@ The main function,
 
 ```
 def descent_test(t0,nb_max_iter,counter,alpha,total_t):
-    
     start_time = time.time()
     def tim():
         return time.time() - start_time
-
     num  = aux.nVariables(N,ncycles,mode)
     H_array = [ham.XXZ_X(N),ham.XXZ_Y(N),ham.XXZ_Z(N)]
-
     # thetas
     init0 = t0  
     init1 = init0 + randomize([0.6 for i in range(len(init0))],0.5)
     init2 = init0 + randomize([0.6 for i in range(len(init0))],0.5)
-
     E0 = energy(init0)
     E1 = energy(init1)
     E2 = energy(init2)
-
     # initial vectors
     Einit = [E0,E1,E2]
     Tinit = [init0,init1,init2]
-
     E,T = aux.sort(Einit,Tinit)
     theta = T[0]
-    
     Vex,E0ex,E1ex = exact_sol(N)
     Eex, psi = energy(T[0],vec=True)
     aux.write(str(0)+','+str(Einit[0])+','+str(aux.fidelity(Vex,psi))+','+str(tim()),'random_estimation_descent',path)
-
     repetitionCounter, Ebefore = 0, 0
-    for iteration in range(nb_max_iter):
-        
-        if tim()<total_t:
-            
+    for iteration in range(nb_max_iter):  
+        if tim()<total_t: 
             if Ebefore == E[0]:
                 repetitionCounter = repetitionCounter+1   
             else:
                 repetitionCounter = 0
-
             if (repetitionCounter<random.gauss(counter[0],20)):
-
                 E,T,Ebefore = step(E,T,ansatz,ncycles,H_array,alpha,iteration+1,tim(),Vex,rnd_mode='0')
-
             elif (repetitionCounter<random.gauss(counter[1],20)):
-
                 E,T,Ebefore = step(E,T,ansatz,ncycles,H_array,alpha,iteration+1,tim(),Vex,rnd_mode='1') 
-
             elif (repetitionCounter<random.gauss(counter[2],10)):
-
                 E,T,Ebefore = step(E,T,ansatz,ncycles,H_array,alpha,iteration+1,tim(),Vex,rnd_mode='2') 
-
             elif (repetitionCounter<random.gauss(counter[3],5)):
-
                 E,T,Ebefore = step(E,T,ansatz,ncycles,H_array,alpha,iteration+1,tim(),Vex,rnd_mode='3') 
-
             else:
                 break
         else:
@@ -126,26 +105,19 @@ def descent_test(t0,nb_max_iter,counter,alpha,total_t):
 And the subfunctions,
 ```
 def nextStep(E,T,d):
-
     dt= (T[0]-T[2])*abs((E[2]-E[0])/E[0])+(T[0]-T[1])*abs((E[1]-E[0])/E[0])
-
     v,EE,E1=exact_sol(N)
     theta= T[0]+np.random.choice([1,-1])*aux.normalize(dt)*d*abs((E[1]-EE*1.1)/EE)
-
     return theta
-
+    
 def nextStepRand(E,T,d):
-
     theta= T[0]+aux.normalize([random.gauss(0,1) for i in range(len(T[0]))])*d
-
     return theta
 
 def randomize(v,d=0):
     return aux.normalize([v[i]+v[i]*(random.gauss(0,1))*d for i in range(len(list(v)))])
 
-
 def step(E,T,ansatz,ncycles,Hdec,alpha,iteration,t,Vex,rnd_mode='0'):
-
     if rnd_mode == '0':
         theta = nextStep(E,T,d=alpha[0])
     elif rnd_mode == '1':
@@ -154,21 +126,15 @@ def step(E,T,ansatz,ncycles,Hdec,alpha,iteration,t,Vex,rnd_mode='0'):
         theta = nextStepRand(E,T,d=alpha[2])
     elif rnd_mode == '3':
         theta = nextStepRand(E,T,d=alpha[3])
-
     Ebefore = E[0]
     Etheta, psi  = energy(theta,vec=True)
-    
     T.append(theta)
     E.append(Etheta)
-
-
     E,T = aux.sort(E,T)
     E = E[:-1]
     T = T[:-1] 
-    
     if Ebefore > E[0]:
-        aux.write(str(iteration)+','+str(E[0])+','+str(aux.fidelity(Vex,psi))+','+str(t),'random_estimation_descent',path)
-        
+        aux.write(str(iteration)+','+str(E[0])+','+str(aux.fidelity(Vex,psi))+','+str(t),'random_estimation_descent',path)   
     return E,T,Ebefore
 ```
 
@@ -178,14 +144,11 @@ Implementation classically of the quantum probabilistic measurement.
 ```
 # a function to simulate a quantum probabilistic measure
 def measure(H,psi):
-    
     E,V = H.eigh()
     V   = np.transpose(V)
-    
     Coef    = [np.vdot(V[i],psi) for i in range(H.basis.Ns)]   # coeficients of state
     Prob    = [abs(Coef[i])**2   for i in range(len(Coef)) ]   # probabilities
     IntProb = [sum(Prob[:i+1]) for i in range(len(Prob))]      # probabilities "integration"
-
     #random probability assignment
     DiceRoll = np.random.rand()*sum(Prob)
     for i in range(len(Prob)):
@@ -195,25 +158,18 @@ def measure(H,psi):
         else:
             if (DiceRoll >= IntProb[i-1]) and ((DiceRoll <= IntProb[i])):
                 index=i
-
     return E[index]
 ```
 And multimeasures
 ```
 def multiMeasure_test(H_array,psi,Nmeasure):
-    
     measure_array = []
-    
     for i in range(len(H_array)):
         measure_array.append([measure(H_array[i],psi) for j in range(Nmeasure)])
-    
-    
     E_array = []
     for i in range(len(np.transpose(measure_array))):
-        E_array.append(sum(np.transpose(measure_array)[i]))
-        
+        E_array.append(sum(np.transpose(measure_array)[i]))    
     E_mean  = np.mean(np.mean(E_array))
-    
     return E_mean
 ```
 
@@ -225,24 +181,17 @@ Evolution described with,
 ```
 # the full evolve function chosing the mode
 def evolve(theta,ncycles,mode):  
-
     N = int(np.log2(len(ansatz)))
-    
     if mode == 'evenodd':
         U = mat.matrix_evenodd(N,theta,ncycles)
-        
     elif mode == 'pairs':
         U = mat.matrix_pairs(N,theta,ncycles)
-        
     elif mode == 'pairs_nnn':
         U = mat.matrix_pairs_nnn(N,theta,ncycles)
-        
     elif mode == 'pairs_conc':
-        U = mat.matrix_pairs_conc(N,theta,ncycles)
-               
+        U = mat.matrix_pairs_conc(N,theta,ncycles)        
     elif mode == 'individual':
-        U = mat.matrix_indiv(N,theta,ncycles)
-        
+        U = mat.matrix_indiv(N,theta,ncycles)  
     return np.dot(U,ansatz)
 ```
 
