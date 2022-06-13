@@ -80,6 +80,118 @@ def energy(theta,vec=False):
 ## RED algorithm 
 Implementation of *random estimation descent* algorithm.
 
+The main function,
+
+```
+def descent_test(t0,nb_max_iter,counter,alpha,total_t):
+    
+    start_time = time.time()
+    def tim():
+        return time.time() - start_time
+
+    num  = aux.nVariables(N,ncycles,mode)
+    H_array = [ham.XXZ_X(N),ham.XXZ_Y(N),ham.XXZ_Z(N)]
+
+    # thetas
+    init0 = t0  
+    init1 = init0 + randomize([0.6 for i in range(len(init0))],0.5)
+    init2 = init0 + randomize([0.6 for i in range(len(init0))],0.5)
+
+    E0 = energy(init0)
+    E1 = energy(init1)
+    E2 = energy(init2)
+
+    # initial vectors
+    Einit = [E0,E1,E2]
+    Tinit = [init0,init1,init2]
+
+    E,T = aux.sort(Einit,Tinit)
+    theta = T[0]
+    
+    Vex,E0ex,E1ex = exact_sol(N)
+    Eex, psi = energy(T[0],vec=True)
+    aux.write(str(0)+','+str(Einit[0])+','+str(aux.fidelity(Vex,psi))+','+str(tim()),'random_estimation_descent',path)
+
+    repetitionCounter, Ebefore = 0, 0
+    for iteration in range(nb_max_iter):
+        
+        if tim()<total_t:
+            
+            if Ebefore == E[0]:
+                repetitionCounter = repetitionCounter+1   
+            else:
+                repetitionCounter = 0
+
+            if (repetitionCounter<random.gauss(counter[0],20)):
+
+                E,T,Ebefore = step(E,T,ansatz,ncycles,H_array,alpha,iteration+1,tim(),Vex,rnd_mode='0')
+
+            elif (repetitionCounter<random.gauss(counter[1],20)):
+
+                E,T,Ebefore = step(E,T,ansatz,ncycles,H_array,alpha,iteration+1,tim(),Vex,rnd_mode='1') 
+
+            elif (repetitionCounter<random.gauss(counter[2],10)):
+
+                E,T,Ebefore = step(E,T,ansatz,ncycles,H_array,alpha,iteration+1,tim(),Vex,rnd_mode='2') 
+
+            elif (repetitionCounter<random.gauss(counter[3],5)):
+
+                E,T,Ebefore = step(E,T,ansatz,ncycles,H_array,alpha,iteration+1,tim(),Vex,rnd_mode='3') 
+
+            else:
+                break
+        else:
+            break
+```
+And the subfunctions,
+```
+def nextStep(E,T,d):
+
+    dt= (T[0]-T[2])*abs((E[2]-E[0])/E[0])+(T[0]-T[1])*abs((E[1]-E[0])/E[0])
+
+    v,EE,E1=exact_sol(N)
+    theta= T[0]+np.random.choice([1,-1])*aux.normalize(dt)*d*abs((E[1]-EE*1.1)/EE)
+
+    return theta
+
+def nextStepRand(E,T,d):
+
+    theta= T[0]+aux.normalize([random.gauss(0,1) for i in range(len(T[0]))])*d
+
+    return theta
+
+def randomize(v,d=0):
+    return aux.normalize([v[i]+v[i]*(random.gauss(0,1))*d for i in range(len(list(v)))])
+
+
+def step(E,T,ansatz,ncycles,Hdec,alpha,iteration,t,Vex,rnd_mode='0'):
+
+    if rnd_mode == '0':
+        theta = nextStep(E,T,d=alpha[0])
+    elif rnd_mode == '1':
+        theta = nextStepRand(E,T,d=alpha[1])
+    elif rnd_mode == '2':
+        theta = nextStepRand(E,T,d=alpha[2])
+    elif rnd_mode == '3':
+        theta = nextStepRand(E,T,d=alpha[3])
+
+    Ebefore = E[0]
+    Etheta, psi  = energy(theta,vec=True)
+    
+    T.append(theta)
+    E.append(Etheta)
+
+
+    E,T = aux.sort(E,T)
+    E = E[:-1]
+    T = T[:-1] 
+    
+    if Ebefore > E[0]:
+        aux.write(str(iteration)+','+str(E[0])+','+str(aux.fidelity(Vex,psi))+','+str(t),'random_estimation_descent',path)
+        
+    return E,T,Ebefore
+```
+
 ## Multimeasure algorithm
 Implementation classically of the quantum probabilistic measurement.
 
