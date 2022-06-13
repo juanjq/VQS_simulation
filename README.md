@@ -1,6 +1,9 @@
 # VQS simulations
 Simulation in python of VQS methods. We will introduce the different functions implemented for our calculus.
 
+For taking the data of measurements use file `measures/data_measuring.ipynb`.
+
+For the DG or RED data use the file `results/data_results.ipynb`.
 
 ## DG algorithm 
 Implementation of *descent gradient* algorithm.
