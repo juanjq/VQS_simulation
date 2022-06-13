@@ -323,9 +323,5 @@ def matrix_indiv(N,theta,ncycles):
             U=np.matmul(U,cycle[j])  
     return U
 ```
-
-## Data generation
-All methods toether to extract data.
-
 ## Hamiltonian definition
 We create a script with all the hamiltonians needed.
