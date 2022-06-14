@@ -43,7 +43,6 @@ def gradient_descent(f,v0,alpha,eps,nb_max_iter,total_t,file='descent_gradient',
             aux.write(str(nb_iter)+','+str(E0)+','+str(aux.fidelity(Vex,psi))+','+str(tim()),file,path)
 ```
 With the cost function,
-
 ```
 def energy(theta,vec=False):
     psi=evolve(theta,ncycles,mode)
