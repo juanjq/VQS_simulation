@@ -1,6 +1,10 @@
 # VQS simulations
 Simulation in python of VQS methods. We will introduce the different functions implemented for our calculus.
 
+<p align="center">
+  <img src="https://github.com/juanjq/VQS_simulation/blob/main/graphs/MainScheme.pdf" width="300" height="500">
+</p>
+
 * For taking the data of measurements use file `measures/data_measuring.ipynb`.
 * For measurement plots `measures/plot_script.ipynb`
 
