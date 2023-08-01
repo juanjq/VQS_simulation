@@ -188,7 +188,7 @@ def multiMeasure_test(H_array,psi,Nmeasure):
 Implementation of the quantum circuit.
 
 <p align="center">
-  <img src="https://github.com/juanjq/VQS_simulation/blob/main/graphs/Circuits.png" width="500" height="430">
+  <img src="https://github.com/juanjq/VQS_simulation/blob/main/graphs/Circuits.png" width="570" height="430">
 </p>
 
 Evolution described with,
