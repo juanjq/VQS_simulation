@@ -341,6 +341,10 @@ def matrix_indiv(N,theta,ncycles):
 ## Hamiltonian definition
 We create a script with all the hamiltonians needed using QuSpin.
 
+<p align="center">
+  <img src="https://github.com/juanjq/VQS_simulation/blob/main/graphs/hamiltonian.png" width="400" height="500">
+</p>
+
 ```
 def XXZ(N,j1,j2,d1,d2,h): 
     basis = spin_basis_1d(N,pauli=False)
