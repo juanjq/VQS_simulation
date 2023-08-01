@@ -342,7 +342,7 @@ def matrix_indiv(N,theta,ncycles):
 We create a script with all the hamiltonians needed using QuSpin.
 
 <p align="center">
-  <img src="https://github.com/juanjq/VQS_simulation/blob/main/graphs/hamiltonian.png" width="1100" height="500">
+  <img src="https://github.com/juanjq/VQS_simulation/blob/main/graphs/hamiltonian.png" width="1100" height="450">
 </p>
 
 ```
