@@ -62,7 +62,7 @@ def energy(theta,vec=False):
 Implementation of *random estimation descent* algorithm.
 
 <p align="center">
-  <img src="https://github.com/juanjq/VQS_simulation/blob/main/graphs/opt_gif.gif" width="500" height="430">
+  <img src="https://github.com/juanjq/VQS_simulation/blob/main/graphs/algorithm-1.pngf" width="500" height="430">
 </p>
 
 The main function,
