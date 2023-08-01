@@ -1,4 +1,4 @@
-# VQS simulations
+# Variational Quantum Simulation
 Simulation in python of VQS methods. We will introduce the different functions implemented for our calculus.
 
 <p align="center">
