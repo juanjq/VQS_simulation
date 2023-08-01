@@ -145,6 +145,10 @@ def step(E,T,ansatz,ncycles,Hdec,alpha,iteration,t,Vex,rnd_mode='0'):
     return E,T,Ebefore
 ```
 
+<p align="center">
+  <img src="https://github.com/juanjq/VQS_simulation/blob/main/graphs/opt_gif.gif" width="500" height="430">
+</p>
+
 ## Multimeasure algorithm
 Implementation classically of the quantum probabilistic measurement.
 
